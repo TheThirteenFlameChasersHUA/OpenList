@@ -1,0 +1,42 @@
+name: Docker package smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download release package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p package
+          gh release download home-background-v1 \
+            --repo TheThirteenFlameChasersHUA/OpenList \
+            --pattern 'openlist-home-background-docker-v1-linux.tar.gz' \
+            --dir package
+          mkdir -p package/context
+          tar -xzf package/openlist-home-background-docker-v1-linux.tar.gz -C package/context
+
+      - name: Build image
+        run: docker build -t openlist-home-background:package package/context
+
+      - name: Smoke test container
+        run: |
+          set -euo pipefail
+          docker run -d --name openlist-package -p 5244:5244 openlist-home-background:package
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:5244/api/public/settings > /tmp/settings.json; then
+              break
+            fi
+            sleep 2
+          done
+          grep -q '"home_background"' /tmp/settings.json
+          docker logs --tail 100 openlist-package
+          docker rm -f openlist-package
