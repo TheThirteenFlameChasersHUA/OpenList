@@ -77,6 +77,28 @@ go build -o openlist .
 
 `public/dist` 已被 `.gitignore` 忽略，构建产物不会进入提交。
 
+### Docker
+
+源码方式构建镜像（会从 fork 的前端 tag 拉取前端）：
+
+```bash
+docker build -f Dockerfile.fork -t openlist-home-background:latest .
+```
+
+或使用 Compose：
+
+```bash
+docker compose -f docker-compose.fork.yml up -d --build
+```
+
+GitHub Release `home-background-v1` 还提供了一个预编译 Docker 构建包：
+
+```text
+openlist-home-background-docker-v1-linux.tar.gz
+```
+
+解压后可直接 `docker build`，不需要 Node.js 或 Go 环境。
+
 ## 上游合并检查清单
 
 1. `internal/conf/const.go`：保留三个 `HomeBackground*` 常量
