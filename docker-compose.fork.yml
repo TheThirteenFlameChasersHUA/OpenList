@@ -1,0 +1,21 @@
+services:
+  openlist:
+    build:
+      context: .
+      dockerfile: Dockerfile.fork
+      args:
+        FRONTEND_REF: home-background-v1
+    image: openlist-home-background:latest
+    container_name: openlist-home-background
+    restart: unless-stopped
+    ports:
+      - "5244:5244"
+      - "5245:5245"
+    environment:
+      - TZ=Asia/Shanghai
+      - UMASK=022
+    volumes:
+      - openlist-data:/opt/openlist/data
+
+volumes:
+  openlist-data:

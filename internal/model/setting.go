@@ -15,6 +15,10 @@ const (
 	TRAFFIC
 )
 
+// BACKGROUND is a fork-specific extension group. Keep a high value so future
+// upstream groups can be appended without renumbering this one.
+const BACKGROUND = 100
+
 const (
 	PUBLIC = iota
 	PRIVATE

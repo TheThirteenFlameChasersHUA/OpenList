@@ -1,0 +1,15 @@
+.git
+.github
+.gitignore
+.air.toml
+build
+data
+dist
+public/dist
+node_modules
+*.db
+*.db-*
+*.log
+*.exe
+openlist
+screenshots
